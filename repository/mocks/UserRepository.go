@@ -65,3 +65,17 @@ func (_m *UserRepository) VerifyAvailableUsername(username string) bool {
 
 	return r0
 }
+
+// VerifyUserIsExist provides a mock function with given fields: userId
+func (_m *UserRepository) VerifyUserIsExist(userId int) error {
+	ret := _m.Called(userId)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(int) error); ok {
+		r0 = rf(userId)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}

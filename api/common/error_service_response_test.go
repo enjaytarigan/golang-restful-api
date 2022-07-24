@@ -2,6 +2,8 @@ package common
 
 import (
 	"brodo-demo/service/auth"
+	"brodo-demo/service/category"
+	"brodo-demo/service/errservice"
 	"brodo-demo/service/user"
 	"errors"
 	"net/http"
@@ -50,6 +52,24 @@ func TestErrorServiceResponse(t *testing.T) {
 			errInput: errors.New("Internal Server Error"),
 			statusCodeWant: http.StatusInternalServerError,
 			messageWant: "Internal Server Error",
+		},
+		{
+			testName: "should have 400 status code when translate error:ErrCategoryNameTooShort",
+			errInput: category.ErrCategoryNameTooShort,
+			statusCodeWant: http.StatusBadRequest,
+			messageWant: "categoryName length should greater than 3",
+		},
+		{
+			testName: "should have 404 status code when translate error:ErrCategoryNotFound",
+			errInput: category.ErrCategoryNotFound,
+			statusCodeWant: http.StatusNotFound,
+			messageWant: "category not found",
+		},
+		{
+			testName: "should have 403 status code when translate error:ErrForbidden",
+			errInput: errservice.ErrForbidden,
+			statusCodeWant: http.StatusForbidden,
+			messageWant: "you don't have permission to access this resource",
 		},
 	}
 
