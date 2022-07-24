@@ -28,7 +28,7 @@ func (repo *UserRepositoryPostgreSQL) Insert(user entity.User) (userId int, err 
 	return userId, nil
 }
 
-func (repo *UserRepositoryPostgreSQL) VerifyAvailableUsername(username string) (bool) {
+func (repo *UserRepositoryPostgreSQL) VerifyAvailableUsername(username string) bool {
 	query := "SELECT username FROM users WHERE username = $1"
 
 	row := repo.Conn.QueryRow(query, username)
@@ -59,6 +59,6 @@ func (repo *UserRepositoryPostgreSQL) FindByUsername(username string) (entity.Us
 	return user, nil
 }
 
-func (repo *UserRepositoryPostgreSQL) VerifyUserIsExist(userId int) (error) {
+func (repo *UserRepositoryPostgreSQL) VerifyUserIsExist(userId int) error {
 	return nil
 }
