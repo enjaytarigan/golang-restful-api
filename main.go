@@ -48,16 +48,18 @@ func main() {
 
 	router := gin.New()
 
-
-
 	v1 := router.Group("/api/v1")
 
 	v1.POST("/login", authController.PostLogin)
 
 	adminsRouter := v1.Group("/admins", authMiddleware)
-	adminsRouter.POST("/", userController.PostUser)
-	adminsRouter.POST("/categories", categoryController.PostCategory)
-	adminsRouter.PUT("/categories/:categoryId", categoryController.PutCategoryById)
+	{
+		adminsRouter.POST("/", userController.PostUser)
+		adminsRouter.POST("/categories", categoryController.PostCategory)
+		adminsRouter.GET("/categories", categoryController.GetCategories)
+		adminsRouter.PUT("/categories/:categoryId", categoryController.PutCategoryById)
+		adminsRouter.DELETE("/categories/:categoryId", categoryController.DeleteCategoryById)
+	}
 
 	router.Run(":8000")
 }

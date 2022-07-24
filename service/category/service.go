@@ -9,7 +9,7 @@ import (
 
 var (
 	ErrCategoryNameTooShort = errors.New("category name too shorts")
-	ErrCategoryNotFound = errors.New("category not found")
+	ErrCategoryNotFound     = errors.New("category not found")
 )
 
 type CategoryService struct {
@@ -28,10 +28,11 @@ type CreateCategoryPayload struct {
 }
 
 type UpdateCategoryPayload struct {
-	UserId int
+	UserId       int
 	CategoryName string
-	CategoryId int
+	CategoryId   int
 }
+
 func isValidCategoryName(name string) bool {
 	const minPasswordLength = 3
 	return len(name) > minPasswordLength
@@ -56,8 +57,7 @@ func (service *CategoryService) CreateCategory(payload CreateCategoryPayload) (*
 	return createdCategory, nil
 }
 
-
-func (service *CategoryService)	UpdateCategoryById(payload UpdateCategoryPayload) (*entity.Category, error) {
+func (service *CategoryService) UpdateCategoryById(payload UpdateCategoryPayload) (*entity.Category, error) {
 	if !isValidCategoryName(payload.CategoryName) {
 		return nil, ErrCategoryNameTooShort
 	}
@@ -68,8 +68,8 @@ func (service *CategoryService)	UpdateCategoryById(payload UpdateCategoryPayload
 		return nil, ErrCategoryNotFound
 	}
 
-	if (foundCategory.CreatedBy != payload.UserId) {
-		return nil, errservice.ErrForbidden 
+	if foundCategory.CreatedBy != payload.UserId {
+		return nil, errservice.ErrForbidden
 	}
 
 	foundCategory.Name = payload.CategoryName
@@ -80,4 +80,34 @@ func (service *CategoryService)	UpdateCategoryById(payload UpdateCategoryPayload
 		return nil, err
 	}
 	return updatedCategory, nil
+}
+
+func (service *CategoryService) GetAll() ([]entity.Category, error) {
+	categories, err := service.categoryRepository.FindAll()
+
+	if err != nil {
+		return categories, err
+	}
+
+	return categories, nil
+}
+
+func (service *CategoryService) DeleteCategoryById(categoryId int, userId int) error {
+	category, err := service.categoryRepository.FindById(categoryId)
+
+	if err != nil {
+		return ErrCategoryNotFound
+	}
+
+	if category.CreatedBy != userId {
+		return errservice.ErrForbidden
+	}
+
+	err = service.categoryRepository.DeleteById(categoryId)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

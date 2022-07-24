@@ -93,7 +93,7 @@ func TestUpdateCategoryById(t *testing.T) {
 		payload := UpdateCategoryPayload{
 			UserId:       1,
 			CategoryName: "hp",
-			CategoryId: 1,
+			CategoryId:   1,
 		}
 
 		service := CategoryService{
@@ -109,9 +109,9 @@ func TestUpdateCategoryById(t *testing.T) {
 
 	t.Run("should return ErrCategoryNotFound when given invalid categoryId", func(t *testing.T) {
 		payload := UpdateCategoryPayload{
-			UserId: 1,
+			UserId:       1,
 			CategoryName: "gadget",
-			CategoryId: 0,
+			CategoryId:   0,
 		}
 
 		mockCategoryRepository := new(repository.CategoryRepository)
@@ -131,15 +131,15 @@ func TestUpdateCategoryById(t *testing.T) {
 
 	t.Run("should return errservice.ErrForbideen when payload.UserId is not match to foundCategory.CreatedBy", func(t *testing.T) {
 		payload := UpdateCategoryPayload{
-			UserId: 1,
+			UserId:       1,
 			CategoryName: "gadget",
-			CategoryId: 1,
+			CategoryId:   1,
 		}
 
 		mockCategoryRepository := new(repository.CategoryRepository)
 
 		foundCategory := entity.Category{
-			ID: payload.CategoryId,
+			ID:        payload.CategoryId,
 			CreatedBy: 22,
 		}
 
@@ -158,22 +158,22 @@ func TestUpdateCategoryById(t *testing.T) {
 
 	t.Run("should return updated category correclty", func(t *testing.T) {
 		category := entity.Category{
-			ID: 1,
+			ID:        1,
 			CreatedBy: 1,
-			Name: "Old Name",
+			Name:      "Old Name",
 			CreatedAt: time.Now(),
 		}
 
 		payload := UpdateCategoryPayload{
-			UserId: 1,
+			UserId:       1,
 			CategoryName: "Fashion",
 		}
 
 		mockCategoryRepository := new(repository.CategoryRepository)
 
 		expectedUpdatedResult := &entity.Category{
-			ID: category.ID,
-			Name: payload.CategoryName,
+			ID:        category.ID,
+			Name:      payload.CategoryName,
 			CreatedAt: category.CreatedAt,
 			CreatedBy: category.CreatedBy,
 		}
@@ -181,7 +181,7 @@ func TestUpdateCategoryById(t *testing.T) {
 		category.Name = payload.CategoryName
 
 		mockCategoryRepository.On("FindById", payload.CategoryId).Return(category, nil)
-		mockCategoryRepository.On("Update", category).Return(expectedUpdatedResult, nil)
+		mockCategoryRepository.On("UpdateById", category).Return(expectedUpdatedResult, nil)
 
 		service := CategoryService{
 			categoryRepository: mockCategoryRepository,
@@ -192,5 +192,95 @@ func TestUpdateCategoryById(t *testing.T) {
 		assert.Nil(t, err)
 		assert.NotNil(t, updatedCategory)
 		assert.Equal(t, payload.CategoryName, updatedCategory.Name)
+	})
+}
+
+func TestGetAllCategories(t *testing.T) {
+	t.Run("should return categories data", func(t *testing.T) {
+		mockCategoryRepository := new(repository.CategoryRepository)
+
+		categories := []entity.Category{
+			{ID: 1, Name: "Sport", CreatedAt: time.Now(), CreatedBy: 1},
+			{ID: 2, Name: "Fashion", CreatedAt: time.Now(), CreatedBy: 2},
+		}
+
+		mockCategoryRepository.On("FindAll").Return(categories, nil)
+
+		categoryService := CategoryService{
+			categoryRepository: mockCategoryRepository,
+		}
+
+		foundCategories, err := categoryService.GetAll()
+
+		assert.Nil(t, err)
+		assert.Equal(t, len(categories), len(foundCategories))
+	})
+}
+
+func TestDeleteCategoryById(t *testing.T) {
+	t.Run("should return ErrCategoryNotFound when given invalid categoryId", func(t *testing.T) {
+		mockCategoryRepository := new(repository.CategoryRepository)
+
+		categoryId := 1
+
+		mockCategoryRepository.On("FindById", categoryId).Return(entity.Category{}, errors.New("category not found"))
+
+		categoryService := CategoryService{
+			categoryRepository: mockCategoryRepository,
+		}
+
+		err := categoryService.DeleteCategoryById(categoryId, 1)
+
+		assert.NotNil(t, err)
+		assert.ErrorIs(t, err, ErrCategoryNotFound)
+	})
+
+	t.Run("should return errservice.ErrForbidden when given wrong userId", func(t *testing.T) {
+		mockCategoryRepository := new(repository.CategoryRepository)
+
+		categoryId := 1
+
+		category := entity.Category{
+			ID:        1,
+			Name:      "Example",
+			CreatedAt: time.Now(),
+			CreatedBy: 1,
+		}
+
+		mockCategoryRepository.On("FindById", categoryId).Return(category, nil)
+
+		categoryService := CategoryService{
+			categoryRepository: mockCategoryRepository,
+		}
+
+		err := categoryService.DeleteCategoryById(categoryId, 0)
+
+		assert.NotNil(t, err)
+		assert.ErrorIs(t, err, errservice.ErrForbidden)
+	})
+
+	t.Run("should not return error when given valid categoryId and userId", func(t *testing.T) {
+		mockCategoryRepository := new(repository.CategoryRepository)
+
+		categoryId := 1
+		userId := 1
+
+		category := entity.Category{
+			ID:        1,
+			Name:      "Example",
+			CreatedAt: time.Now(),
+			CreatedBy: userId,
+		}
+
+		mockCategoryRepository.On("FindById", categoryId).Return(category, nil)
+		mockCategoryRepository.On("DeleteById", category.ID).Return(nil)
+
+		categoryService := CategoryService{
+			categoryRepository: mockCategoryRepository,
+		}
+
+		err := categoryService.DeleteCategoryById(categoryId, userId)
+
+		assert.Nil(t, err)
 	})
 }

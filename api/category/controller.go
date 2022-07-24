@@ -79,3 +79,35 @@ func (c *CategoryController) PutCategoryById(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusCreated, response)
 }
+
+func (c *CategoryController) GetCategories(ctx *gin.Context) {
+	categories, err := c.categoryService.GetAll()
+
+	if err != nil {
+		code, response := common.NewErrorServiceResponse(err)
+		ctx.JSON(code, response)
+	}
+
+	body := response.GetCategories{
+		Categories: categories,
+	}
+
+	response := common.NewSuccessResponse(body)
+
+	ctx.JSON(http.StatusOK, response)
+}
+
+func (c *CategoryController) DeleteCategoryById(ctx *gin.Context) {
+	categoryId, _ := strconv.Atoi(ctx.Param("categoryId"))
+
+	err := c.categoryService.DeleteCategoryById(categoryId, ctx.GetInt("userId"))
+
+	if err != nil {
+		statusCode, body := common.NewErrorServiceResponse(err)
+		ctx.JSON(statusCode, body)
+		return
+	}
+
+	response := common.NewSuccessResponse(nil)
+	ctx.JSON(http.StatusOK, response)
+}

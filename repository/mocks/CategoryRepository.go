@@ -10,6 +10,43 @@ type CategoryRepository struct {
 	mock.Mock
 }
 
+// DeleteById provides a mock function with given fields: categoryId
+func (_m *CategoryRepository) DeleteById(categoryId int) error {
+	ret := _m.Called(categoryId)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(int) error); ok {
+		r0 = rf(categoryId)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// FindAll provides a mock function with given fields:
+func (_m *CategoryRepository) FindAll() ([]entity.Category, error) {
+	ret := _m.Called()
+
+	var r0 []entity.Category
+	if rf, ok := ret.Get(0).(func() []entity.Category); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]entity.Category)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func() error); ok {
+		r1 = rf()
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // FindById provides a mock function with given fields: Id
 func (_m *CategoryRepository) FindById(Id int) (entity.Category, error) {
 	ret := _m.Called(Id)
