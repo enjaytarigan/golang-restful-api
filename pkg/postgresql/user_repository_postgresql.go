@@ -58,3 +58,7 @@ func (repo *UserRepositoryPostgreSQL) FindByUsername(username string) (entity.Us
 
 	return user, nil
 }
+
+func (repo *UserRepositoryPostgreSQL) VerifyUserIsExist(userId int) (error) {
+	return nil
+}
