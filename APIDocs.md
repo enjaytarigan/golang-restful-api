@@ -2,7 +2,7 @@
 
 ## Admin API
 
-### `POST /admins/login`
+### `POST /login`
 
 Body Request:
 
@@ -77,5 +77,81 @@ Response:
 {
   "status": "false",
   "message": "<error cause message>"
+}
+```
+
+### `POST /admins/categories`
+
+Description: add new category
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer + {accessToken}"
+}
+```
+
+Body Request:
+
+```json
+{
+  "categoryName": "<string>"
+}
+```
+
+Response:
+
+`201 - Created`
+
+```json
+{
+  "status": true,
+  "data": {
+    "category": {
+      "ID": "<integer, unique>",
+      "Name": "<string>",
+      "CreatedAt": "<date>",
+      "CreatedBy": "<integer>"
+    }
+  }
+}
+```
+
+### `PUT /admins/categories/{categoryId}`
+
+Description: edit category by id
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer + {accessToken}"
+}
+```
+
+Body Request:
+
+```json
+{
+  "categoryName": "<string>"
+}
+```
+
+Response:
+
+`200 - OK`
+
+```json
+{
+  "status": true,
+  "data": {
+    "category": {
+      "ID": "<integer, unique>",
+      "Name": "<string>",
+      "CreatedAt": "<date>",
+      "CreatedBy": "<integer>"
+    }
+  }
 }
 ```
