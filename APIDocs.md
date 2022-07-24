@@ -155,3 +155,58 @@ Response:
   }
 }
 ```
+
+### `DELETE /admins/categories/{categoryId}`
+
+Description: delete category by id
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer + {accessToken}"
+}
+```
+
+Body Request:
+
+```json
+{
+  "categoryName": "<string>"
+}
+```
+
+Response:
+
+`200 - OK`
+
+```json
+{
+  "status": true
+}
+```
+
+### `GET /admins/categories`
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer + {accessToken}"
+}
+```
+
+Body Request: -
+
+Response:
+
+`200 - OK`
+
+```json
+{
+  "status": true,
+  "data": {
+    "categories": []
+  }
+}
+```
