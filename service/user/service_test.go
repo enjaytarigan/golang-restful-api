@@ -66,8 +66,6 @@ func TestCreateUser_InvalidPayload(t *testing.T) {
 func TestCreateUser_Failed_UsernameIsNotAvailable(t *testing.T) {
 	mockUserRepository := repository.UserRepository{}
 
-
-
 	payload := CreateUserPayload{
 		Username: "alreadyexistusername",
 		Password: "passwordstrong",

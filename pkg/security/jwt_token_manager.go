@@ -39,14 +39,13 @@ func (tokenManager *JwtTokenManager) CreateAccessToken(userId int) (string, erro
 }
 
 func (tokenManager *JwtTokenManager) VerifyAccessToken(accessToken string) (int, error) {
-	token, err := jwt.ParseWithClaims(accessToken,&jwtClaims{}, func(t *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(accessToken, &jwtClaims{}, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("invalid token")
 		}
 
 		return getSecretKey(), nil
 	})
-
 
 	if err != nil {
 		return 0, err

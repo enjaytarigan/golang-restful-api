@@ -2,6 +2,7 @@ package postgresql
 
 import (
 	"brodo-demo/entity"
+	"brodo-demo/repository"
 	"database/sql"
 	"errors"
 )
@@ -10,7 +11,7 @@ type CategoryRepositoryPostgreSQL struct {
 	Conn *sql.DB
 }
 
-func NewCategoryRepositoryPostgreSQL(conn *sql.DB) *CategoryRepositoryPostgreSQL {
+func NewCategoryRepositoryPostgreSQL(conn *sql.DB) repository.CategoryRepository {
 	return &CategoryRepositoryPostgreSQL{
 		Conn: conn,
 	}

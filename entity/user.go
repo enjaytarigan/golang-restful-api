@@ -3,9 +3,9 @@ package entity
 import "time"
 
 type User struct {
-	ID        int
-	Username  string
+	ID        int    `json:"id"`
+	Username  string `json:"username"`
 	Password  string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }

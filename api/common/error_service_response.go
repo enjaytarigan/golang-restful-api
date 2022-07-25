@@ -4,6 +4,7 @@ import (
 	"brodo-demo/service/auth"
 	"brodo-demo/service/category"
 	"brodo-demo/service/errservice"
+	"brodo-demo/service/product"
 	"brodo-demo/service/user"
 	"net/http"
 )
@@ -36,10 +37,17 @@ func translateError(err error) (statusCode int, body ErrorServiceResponse) {
 
 	case category.ErrCategoryNameTooShort:
 		return newInvalidSpecError("categoryName length should greater than 3")
-	
+
 	case category.ErrCategoryNotFound:
 		return newNotFoundError("category not found")
-	
+
+	case product.ErrProductName:
+		return newInvalidSpecError("length of product name must be greater than 5")
+	case product.ErrProductPrice:
+		return newInvalidSpecError("price must be greater than 1000")
+	case product.ErrProductType:
+		return newInvalidSpecError("product type not found")
+
 	case errservice.ErrForbidden:
 		return newForbiddenError()
 	default:
@@ -63,14 +71,14 @@ func newInternalServerError() (statusCode int, body ErrorServiceResponse) {
 
 func newNotFoundError(message string) (statusCode int, body ErrorServiceResponse) {
 	return http.StatusNotFound, ErrorServiceResponse{
-		Status: false,
+		Status:  false,
 		Message: message,
 	}
 }
 
 func newForbiddenError() (statusCode int, body ErrorServiceResponse) {
 	return http.StatusForbidden, ErrorServiceResponse{
-		Status: false,
+		Status:  false,
 		Message: "you don't have permission to access this resource",
 	}
 }
