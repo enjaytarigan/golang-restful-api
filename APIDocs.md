@@ -210,3 +210,97 @@ Response:
   }
 }
 ```
+
+### `GET /admins/products`
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer + {accessToken}"
+}
+```
+
+Query:
+
+```json
+{
+  "page": "int",
+  "size": "int"
+}
+```
+
+Body Request: -
+
+Response:
+
+`200 - OK`
+
+```json
+{
+  "status": true,
+  "data": {
+    "products": [
+      {
+        "id": "int",
+        "name": "string",
+        "description": "string",
+        "price": "number",
+        "categoryId": "int",
+        "createdBy": "int",
+        "type": "int",
+        "category": "string",
+        "createdAt": "date"
+      }
+    ],
+    "totalItems": "int",
+    "totalPages": "int",
+    "currentPage": "int"
+  }
+}
+```
+
+### `POST /admins/products`
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer + {accessToken}"
+}
+```
+
+Body Request:
+
+```
+multipart/form-data
+
+mainImg     : imag
+name        : string
+price       : integer
+categoryId  : integer
+description : string
+```
+
+Response:
+
+`201 - Created`
+
+```json
+{
+  "status": true,
+  "data": {
+    "product": {
+      "id": "int",
+      "name": "string",
+      "description": "string",
+      "price": "number",
+      "categoryId": "int",
+      "createdBy": "int",
+      "type": "int",
+      "category": "string",
+      "createdAt": "date"
+    }
+  }
+}
+```
