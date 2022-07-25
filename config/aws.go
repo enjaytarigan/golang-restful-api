@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -31,7 +30,6 @@ func NewS3Client() *s3.S3 {
 	session, err := session.NewSession(config)
 
 	if err != nil {
-		fmt.Println(err)
 		panic(err)
 	}
 

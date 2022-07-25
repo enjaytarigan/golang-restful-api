@@ -6,7 +6,6 @@ import (
 	"brodo-demo/api/product/response"
 	"brodo-demo/entity"
 	"brodo-demo/service/product"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -56,7 +55,6 @@ func (c *ProductController) PostProduct(ctx *gin.Context) {
 	newProduct, err := c.productService.CreateProduct(product, mainImgHeader, mainImgFile)
 
 	if err != nil {
-		fmt.Println(err)
 		statusCode, response := common.NewErrorServiceResponse(err)
 		ctx.JSON(statusCode, response)
 		return
@@ -77,7 +75,6 @@ func (c *ProductController) GetProducts(ctx *gin.Context) {
 	products, pagination, err := c.productService.GetProducts(param)
 
 	if err != nil {
-		fmt.Println(err)
 		statusCode, response := common.NewErrorServiceResponse(err)
 		ctx.JSON(statusCode, response)
 		return
