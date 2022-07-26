@@ -49,7 +49,7 @@ func (repo *ProductRepositoryPostgreSQL) VerifyProductTypeIsExists(productTypeId
 
 func (repo *ProductRepositoryPostgreSQL) FindAllAndCount(param repository.FindAllProductsParam) ([]entity.Product, int, error) {
 	query := `
-		SELECT p.id, p.name, p.description, p.main_img, p.price, p.created_by, p.category_id, c.name AS category
+		SELECT p.id, p.name, p.description, p.main_img, p.price, p.created_by, p.category_id, c.name AS category, p.created_at
 		FROM products AS p
 		INNER JOIN categories AS c ON c.id = p.category_id
 	`
@@ -64,7 +64,7 @@ func (repo *ProductRepositoryPostgreSQL) FindAllAndCount(param repository.FindAl
 
 	if param.Limit > 0 && param.Skip >= 0 {
 		query = `
-			SELECT p.id, p.name, p.description, p.main_img, p.price, p.created_by, p.category_id, c.name AS category
+			SELECT p.id, p.name, p.description, p.main_img, p.price, p.created_by, p.category_id, c.name AS category, p.created_at
 			FROM products AS p
 			INNER JOIN categories AS c ON c.id = p.category_id
 			LIMIT $1 OFFSET $2
@@ -85,7 +85,7 @@ func (repo *ProductRepositoryPostgreSQL) FindAllAndCount(param repository.FindAl
 	for rows.Next() {
 		var product entity.Product
 
-		if err := rows.Scan(&product.ID, &product.Name, &product.Description, &product.MainImg, &product.Price, &product.CreatedBy, &product.CategoryId, &product.Category); err != nil {
+		if err := rows.Scan(&product.ID, &product.Name, &product.Description, &product.MainImg, &product.Price, &product.CreatedBy, &product.CategoryId, &product.Category, &product.CreatedAt); err != nil {
 			return []entity.Product{}, 0, err
 		}
 
