@@ -297,7 +297,60 @@ Response:
       "price": "number",
       "categoryId": "int",
       "createdBy": "int",
-      "type": "int",
+      "category": "string",
+      "createdAt": "date"
+    }
+  }
+}
+```
+
+## Public API
+
+### `GET /pub/products`
+
+Query Params:
+
+```json
+{
+  "minPrice": "integer",
+  "maxPrice": "integer",
+  "page": "integer",
+  "size": "pagination size"
+}
+```
+
+Response:
+
+`200 - OK`
+
+```json
+{
+  "status": true,
+  "data": {
+    "products": []
+  }
+}
+```
+
+### `GET /pub/products/{productId}`
+
+Body Request: -
+
+Response:
+
+`200 - OK`
+
+```json
+{
+  "status": true,
+  "data": {
+    "product": {
+      "id": "int",
+      "name": "string",
+      "description": "string",
+      "price": "number",
+      "categoryId": "int",
+      "createdBy": "int",
       "category": "string",
       "createdAt": "date"
     }
