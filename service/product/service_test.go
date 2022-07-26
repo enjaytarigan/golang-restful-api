@@ -13,8 +13,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var typeProduct int = 1
-
 func TestIsValidPrice(t *testing.T) {
 	tableTest := []struct {
 		name  string
@@ -135,33 +133,6 @@ func TestCreateProduc(t *testing.T) {
 		assert.ErrorIs(t, err, category.ErrCategoryNotFound)
 	})
 
-	t.Run("should return ErrProductType when given invalid product.Type", func(t *testing.T) {
-		categoryRepository := new(repository.CategoryRepository)
-		productRepository := new(repository.ProductRepository)
-
-		product := entity.Product{
-			Name:       "Alpha Legacy Vegtan",
-			Price:      150_000,
-			MainImg:    "http://example.com/main.jpg",
-			CategoryId: 1,
-			Type:       &typeProduct,
-		}
-
-		categoryRepository.On("FindById", product.CategoryId).Return(entity.Category{}, nil)
-		productRepository.On("VerifyProductTypeIsExists", *product.Type).Return(errors.New("invalid product type"))
-
-		service := ProductService{
-			productRepository:  productRepository,
-			categoryRepository: categoryRepository,
-		}
-
-		newProduct, err := service.CreateProduct(product, nil, nil)
-
-		assert.Nil(t, newProduct)
-		assert.NotNil(t, err)
-		assert.ErrorIs(t, err, ErrProductType)
-	})
-
 	t.Run("should return new product correctly", func(t *testing.T) {
 		categoryRepository := new(repository.CategoryRepository)
 		productRepository := new(repository.ProductRepository)
@@ -171,7 +142,6 @@ func TestCreateProduc(t *testing.T) {
 			Name:        "Alpha Legacy Vegtan",
 			Price:       150_000,
 			CategoryId:  1,
-			Type:        &typeProduct,
 			CreatedBy:   1,
 			Description: "Hello World Description",
 		}
@@ -182,7 +152,6 @@ func TestCreateProduc(t *testing.T) {
 			Price:       150_000,
 			MainImg:     "main_img_url",
 			CategoryId:  1,
-			Type:        &typeProduct,
 			CreatedBy:   1,
 			Description: "Hello World Description",
 			CreatedAt:   time.Now(),
@@ -191,7 +160,6 @@ func TestCreateProduc(t *testing.T) {
 		fileHeader := &multipart.FileHeader{}
 
 		categoryRepository.On("FindById", product.CategoryId).Return(entity.Category{}, nil)
-		productRepository.On("VerifyProductTypeIsExists", *product.Type).Return(nil)
 		mockUploader.On("Upload", fileHeader, nil).Return("main_img_url", nil)
 
 		product.MainImg = "main_img_url"
@@ -213,6 +181,5 @@ func TestCreateProduc(t *testing.T) {
 		assert.Equal(t, product.Description, newProduct.Description)
 		assert.Equal(t, product.CategoryId, newProduct.CategoryId)
 		assert.Equal(t, product.CreatedBy, newProduct.CreatedBy)
-		assert.Equal(t, product.Type, newProduct.Type)
 	})
 }

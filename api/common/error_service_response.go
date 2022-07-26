@@ -45,8 +45,8 @@ func translateError(err error) (statusCode int, body ErrorServiceResponse) {
 		return newInvalidSpecError("length of product name must be greater than 5")
 	case product.ErrProductPrice:
 		return newInvalidSpecError("price must be greater than 1000")
-	case product.ErrProductType:
-		return newInvalidSpecError("product type not found")
+	case product.ErrProductNotFound:
+		return newNotFoundError("product not found")
 
 	case errservice.ErrForbidden:
 		return newForbiddenError()

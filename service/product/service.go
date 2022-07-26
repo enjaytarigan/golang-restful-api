@@ -7,14 +7,16 @@ import (
 	"brodo-demo/service/pagination"
 	"brodo-demo/service/uploader"
 	"errors"
+	"fmt"
 	"mime/multipart"
 )
 
 var (
-	ErrProductPrice = errors.New("product price must be greater than Rp1.000")
-	ErrProductName  = errors.New("product name length must be greater than 5")
-	ErrMainImg      = errors.New("invalid main img")
-	ErrProductType  = errors.New("invalid product type")
+	ErrProductPrice    = errors.New("product price must be greater than Rp1.000")
+	ErrProductName     = errors.New("product name length must be greater than 5")
+	ErrMainImg         = errors.New("invalid main img")
+	ErrProductType     = errors.New("invalid product type")
+	ErrProductNotFound = errors.New("product not found")
 )
 
 type ProductService struct {
@@ -26,6 +28,8 @@ type ProductService struct {
 type GetAllProductsParam struct {
 	Page int
 	Size int
+	MinPrice int
+	MaxPrice int
 }
 
 func NewProductService(productRepository repository.ProductRepository, categoryRepository repository.CategoryRepository, uploader uploader.Uploader) *ProductService {
@@ -58,12 +62,6 @@ func (service *ProductService) CreateProduct(product entity.Product, mainImageHe
 		return nil, category.ErrCategoryNotFound
 	}
 
-	if product.Type != nil {
-		if err := service.productRepository.VerifyProductTypeIsExists(*product.Type); err != nil && *product.Type != 0 {
-			return nil, ErrProductType
-		}
-	}
-
 	mainUrl, err := service.uploader.Upload(mainImageHeader, mainImageFile)
 
 	if err != nil {
@@ -87,6 +85,8 @@ func (service *ProductService) GetProducts(params GetAllProductsParam) ([]entity
 	products, count, err := service.productRepository.FindAllAndCount(repository.FindAllProductsParam{
 		Skip:  skip,
 		Limit: limit,
+		MinPrice: params.MinPrice,
+		MaxPrice: params.MaxPrice,
 	})
 
 	if err != nil {
@@ -94,4 +94,15 @@ func (service *ProductService) GetProducts(params GetAllProductsParam) ([]entity
 	}
 
 	return products, pagination.NewPagination(count, currentPage, limit), nil
+}
+
+func (service *ProductService) GetProductById(productId int) (entity.Product, error) {
+	product, err := service.productRepository.FindById(productId)
+
+	if err != nil {
+		fmt.Println(err)
+		return product, ErrProductNotFound
+	}
+
+	return product, nil
 }

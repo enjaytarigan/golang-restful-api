@@ -66,7 +66,6 @@ func main() {
 	v1 := router.Group("/api/v1")
 
 	v1.POST("/login", authController.PostLogin)
-	v1.POST("/register", userController.PostUser)
 
 	adminsRouter := v1.Group("/admins", authMiddleware)
 	{
@@ -77,6 +76,13 @@ func main() {
 		adminsRouter.DELETE("/categories/:categoryId", categoryController.DeleteCategoryById)
 		adminsRouter.POST("/products", productController.PostProduct)
 		adminsRouter.GET("/products", productController.GetProducts)
+	}
+
+	publicRouter := v1.Group("/pub")
+	{
+		publicRouter.GET("/categories", categoryController.GetCategories)
+		publicRouter.GET("/products", productController.GetProducts)
+		publicRouter.GET("/products/:productId", productController.GetProductById)
 	}
 
 	router.Run(":8000")

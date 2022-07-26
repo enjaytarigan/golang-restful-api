@@ -85,10 +85,10 @@ func TestErrorServiceResponse(t *testing.T) {
 			messageWant:    "price must be greater than 1000",
 		},
 		{
-			testName:       "should have 400 status code when translate error:ErrProductType",
-			errInput:       product.ErrProductType,
-			statusCodeWant: http.StatusBadRequest,
-			messageWant:    "product type not found",
+			testName: "should have 404 status code when translate error:ErrorProductNotFound",
+			errInput: product.ErrProductNotFound,
+			statusCodeWant: http.StatusNotFound,
+			messageWant: "product not found",
 		},
 	}
 

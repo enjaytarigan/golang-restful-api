@@ -1,10 +1,3 @@
-CREATE TABLE product_types(
-    id SERIAL PRIMARY KEY,
-    type VARCHAR(255) NOT NULL
-);
-
-INSERT INTO product_types(type) VALUES('featured'), ('new release');
-
 CREATE TABLE products(
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -14,8 +7,6 @@ CREATE TABLE products(
     category_id INT NOT NULL,
     created_at  TIMESTAMP DEFAULT current_timestamp,
     created_by INT NOT NULL,
-    type INT,
     FOREIGN KEY(created_by) REFERENCES users(id),
-    FOREIGN KEY(category_id) REFERENCES categories(id),
-    FOREIGN KEY(type) REFERENCES product_types(id)
+    FOREIGN KEY(category_id) REFERENCES categories(id)
 );

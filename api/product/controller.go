@@ -6,6 +6,7 @@ import (
 	"brodo-demo/api/product/response"
 	"brodo-demo/entity"
 	"brodo-demo/service/product"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -36,7 +37,6 @@ func (c *ProductController) PostProduct(ctx *gin.Context) {
 		Description: body.Description,
 		CategoryId:  body.CategoryId,
 		Price:       body.Price,
-		Type:        body.Type,
 		CreatedBy:   ctx.GetInt("userId"),
 	}
 
@@ -55,6 +55,7 @@ func (c *ProductController) PostProduct(ctx *gin.Context) {
 	newProduct, err := c.productService.CreateProduct(product, mainImgHeader, mainImgFile)
 
 	if err != nil {
+		fmt.Println(err)
 		statusCode, response := common.NewErrorServiceResponse(err)
 		ctx.JSON(statusCode, response)
 		return
@@ -66,10 +67,14 @@ func (c *ProductController) PostProduct(ctx *gin.Context) {
 func (c *ProductController) GetProducts(ctx *gin.Context) {
 	size, _ := strconv.Atoi(ctx.Query("size"))
 	page, _ := strconv.Atoi(ctx.Query("page"))
+	minPrice, _ := strconv.Atoi(ctx.Query("minPrice"))
+	maxPrice, _ := strconv.Atoi(ctx.Query("maxPrice"))
 
 	param := product.GetAllProductsParam{
 		Page: page,
 		Size: size,
+		MinPrice: minPrice,
+		MaxPrice: maxPrice,
 	}
 
 	products, pagination, err := c.productService.GetProducts(param)
@@ -81,9 +86,27 @@ func (c *ProductController) GetProducts(ctx *gin.Context) {
 	}
 
 	dataResponse := response.GetProductsResponse{
-		Products: products,
+		Products:   products,
 		Pagination: pagination,
 	}
 
-	ctx.JSON(http.StatusOK,common.NewSuccessResponse(&dataResponse))
+	ctx.JSON(http.StatusOK, common.NewSuccessResponse(&dataResponse))
+}
+
+func (c *ProductController) GetProductById(ctx *gin.Context) {
+	productId, _ := strconv.Atoi(ctx.Param("productId"))
+
+	product, err := c.productService.GetProductById(productId)
+
+	if err != nil {
+		statusCode, body := common.NewErrorServiceResponse(err)
+		ctx.JSON(statusCode, body)
+		return
+	}
+
+	response := response.ProductResponse{
+		Product: &product,
+	}
+
+	ctx.JSON(http.StatusOK, common.NewSuccessResponse(&response))
 }

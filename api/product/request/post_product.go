@@ -5,5 +5,4 @@ type PostProductRequest struct {
 	Description string `json:"description" form:"description"`
 	Price       int    `json:"price" form:"price"`
 	CategoryId  int    `json:"categoryId" form:"categoryId"`
-	Type        *int    `json:"type,omitempty" form:"type"`
 }

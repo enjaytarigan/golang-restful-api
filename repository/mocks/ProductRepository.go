@@ -41,6 +41,27 @@ func (_m *ProductRepository) FindAllAndCount(params repository.FindAllProductsPa
 	return r0, r1, r2
 }
 
+// FindById provides a mock function with given fields: productId
+func (_m *ProductRepository) FindById(productId int) (entity.Product, error) {
+	ret := _m.Called(productId)
+
+	var r0 entity.Product
+	if rf, ok := ret.Get(0).(func(int) entity.Product); ok {
+		r0 = rf(productId)
+	} else {
+		r0 = ret.Get(0).(entity.Product)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(int) error); ok {
+		r1 = rf(productId)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // InsertOne provides a mock function with given fields: product
 func (_m *ProductRepository) InsertOne(product entity.Product) (*entity.Product, error) {
 	ret := _m.Called(product)
@@ -62,18 +83,4 @@ func (_m *ProductRepository) InsertOne(product entity.Product) (*entity.Product,
 	}
 
 	return r0, r1
-}
-
-// VerifyProductTypeIsExists provides a mock function with given fields: productTypeId
-func (_m *ProductRepository) VerifyProductTypeIsExists(productTypeId int) error {
-	ret := _m.Called(productTypeId)
-
-	var r0 error
-	if rf, ok := ret.Get(0).(func(int) error); ok {
-		r0 = rf(productTypeId)
-	} else {
-		r0 = ret.Error(0)
-	}
-
-	return r0
 }

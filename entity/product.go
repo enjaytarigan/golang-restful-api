@@ -9,8 +9,7 @@ type Product struct {
 	MainImg     string    `json:"mainImg"`
 	Price       int       `json:"price"`
 	CategoryId  int       `json:"categoryId"`
-	CreatedBy   int       `json:"createdBy"`
-	Type        *int       `json:"type"`
 	Category    string    `json:"category"`
-	CreatedAt   time.Time `json:"createdAt"`
+	CreatedBy   int       `json:"createdBy,omitempty"`
+	CreatedAt   time.Time `json:"createdAt,omitempty"`
 }
