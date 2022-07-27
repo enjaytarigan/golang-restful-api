@@ -14,8 +14,9 @@ func ConnectDB() (*sql.DB, error) {
 	PG_PASSWORD := os.Getenv("PG_PASSWORD")
 	PG_PORT := os.Getenv("PG_PORT")
 	PG_DATABASE := os.Getenv("PG_DATABASE")
+	PG_SSLMODE := os.Getenv("PG_SSLMODE")
 
-	connection := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", PG_USER, PG_PASSWORD, PG_HOST, PG_PORT, PG_DATABASE)
+	connection := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=%s", PG_USER, PG_PASSWORD, PG_HOST, PG_PORT, PG_DATABASE, PG_SSLMODE)
 
 	db, err := sql.Open("postgres", connection)
 

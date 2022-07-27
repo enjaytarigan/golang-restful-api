@@ -6,6 +6,7 @@ import (
 	"brodo-demo/api/middleware"
 	productController "brodo-demo/api/product"
 	userController "brodo-demo/api/user"
+	"os"
 
 	"brodo-demo/config"
 	"brodo-demo/pkg/postgresql"
@@ -85,5 +86,6 @@ func main() {
 		publicRouter.GET("/products/:productId", productController.GetProductById)
 	}
 
-	router.Run(":8000")
+	PORT := os.Getenv("PORT")
+	router.Run(":" + PORT)
 }
