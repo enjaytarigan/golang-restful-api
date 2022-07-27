@@ -83,5 +83,6 @@ func main() {
 	}
 
 	PORT := os.Getenv("PORT")
+	SeedAdmin(userRepository, bcryptPasswordHash)
 	router.Run(":" + PORT)
 }
