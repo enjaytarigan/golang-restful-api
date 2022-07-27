@@ -10,16 +10,17 @@ import (
 
 func SeedAdmin(userRepository repository.UserRepository, passwordHash security.PasswordHash) {
 	username := os.Getenv("INIT_ADMIN_USERNAME")
-	passowrd := os.Getenv("INIT_ADMIN_PASSWORD")
 	_, err := userRepository.FindByUsername(username)
 
 	if err == nil {
 		return
 	}
 
+	password, _ := passwordHash.Hash(os.Getenv("INIT_ADMIN_PASSWORD"))
+
 	_, err = userRepository.Insert(entity.User{
 		Username: username,
-		Password: passowrd,
+		Password: password,
 	})
 
 	if err != nil {
