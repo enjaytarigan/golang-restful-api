@@ -23,11 +23,7 @@ import (
 )
 
 func main() {
-	err := godotenv.Load()
-
-	if err != nil {
-		panic(err)
-	}
+	godotenv.Load()
 
 	conn, err := config.ConnectDB()
 
