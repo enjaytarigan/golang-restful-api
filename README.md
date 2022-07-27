@@ -7,3 +7,5 @@
 + JWT
 + PostgreSQL
 + AWS S3
++ Testify
++ Mockery
